@@ -27,6 +27,18 @@ go.work.sum
 # env file
 .env
 
+# Downloaded/compiled binaries
+bin/
+!bin/.gitkeep
+
+# CLI binaries built to project root (go build without -o)
+gemini-cli
+veo3-cli
+jimeng-cli
+
+# Release build output
+dist/
+
 # Editor/IDE
 # .idea/
 # .vscode/

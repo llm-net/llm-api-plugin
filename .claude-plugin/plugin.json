@@ -1,0 +1,9 @@
+{
+  "name": "llm-api-plugin",
+  "description": "CLI tools for multiple LLM APIs (Gemini, Veo3, Jimeng, etc.) as Claude Code skills",
+  "version": "0.1.0",
+  "author": {
+    "name": "llm-api-plugin"
+  },
+  "license": "MIT"
+}

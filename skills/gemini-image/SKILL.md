@@ -22,7 +22,7 @@ The binary is located at `<plugin-dir>/bin/gemini-cli`. If it doesn't exist, run
 <plugin-dir>/bin/gemini-cli models
 
 # Get details for a specific model
-<plugin-dir>/bin/gemini-cli models gemini-3-pro-image-preview
+<plugin-dir>/bin/gemini-cli models gemini-3.1-flash-image-preview
 ```
 
 The output is JSON, example:
@@ -77,5 +77,6 @@ Config is stored at `~/.config/llm-api-plugin/config.json`.
 ## Notes
 
 - The API is synchronous, may take 10-30 seconds for image generation
-- Images are returned as JPEG, saved to the specified output path
+- Images are returned as PNG, saved to the specified output path
 - Both text and image can be returned in a single response
+- `gemini-3.1-flash-image-preview` is faster and cheaper, supports more aspect ratios

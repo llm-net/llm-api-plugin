@@ -32,9 +32,9 @@ bin/
 !bin/.gitkeep
 
 # CLI binaries built to project root (go build without -o)
-gemini-cli
-veo3-cli
-jimeng-cli
+/gemini-cli
+/veo3-cli
+/jimeng-cli
 
 # Release build output
 dist/

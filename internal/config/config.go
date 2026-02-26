@@ -9,12 +9,14 @@ import (
 
 type ServiceConfig struct {
 	APIKey string `json:"api_key"`
+	UID    string `json:"uid,omitempty"`
 }
 
 type Config struct {
 	Gemini *ServiceConfig `json:"gemini,omitempty"`
 	Veo3   *ServiceConfig `json:"veo3,omitempty"`
-	Jimeng *ServiceConfig `json:"jimeng,omitempty"`
+	Ark     *ServiceConfig `json:"ark,omitempty"`
+	TopView *ServiceConfig `json:"topview,omitempty"`
 }
 
 func Path() string {

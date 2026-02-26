@@ -2,7 +2,7 @@ GO := go
 GOFLAGS := -trimpath
 BIN_DIR := bin
 
-TOOLS := gemini-cli
+TOOLS := gemini-cli ark-cli topview-cli
 
 .PHONY: all build clean $(TOOLS)
 
@@ -12,6 +12,12 @@ build: $(TOOLS)
 
 gemini-cli:
 	$(GO) build $(GOFLAGS) -o $(BIN_DIR)/$@ ./cmd/gemini-cli/
+
+ark-cli:
+	$(GO) build $(GOFLAGS) -o $(BIN_DIR)/$@ ./cmd/ark-cli/
+
+topview-cli:
+	$(GO) build $(GOFLAGS) -o $(BIN_DIR)/$@ ./cmd/topview-cli/
 
 # Cross-compile all tools for release
 .PHONY: release

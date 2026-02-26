@@ -8,7 +8,7 @@ LOCAL_VERSION_FILE="${BIN_DIR}/.version"
 
 REPO="llm-net/llm-api-plugin"
 
-TOOLS=(gemini-cli)  # Add more as they are developed: veo3-cli jimeng-cli
+TOOLS=(gemini-cli ark-cli topview-cli)
 
 # Read required version
 REQUIRED_VERSION="$(cat "$VERSION_FILE" | tr -d '[:space:]')"

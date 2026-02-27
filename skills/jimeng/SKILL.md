@@ -1,11 +1,11 @@
 ---
 name: jimeng
-description: Generate videos using Jimeng Video Generation 3.0 Pro API (即梦视频生成). Use when the user wants to generate or create videos with Jimeng.
+description: Generate videos using Jimeng APIs - Action Imitation V2 (action reenactment) and OmniHuman 1.5 (talking-head from portrait+audio). Use when the user wants to generate or create videos with Jimeng.
 allowed-tools: Bash, Read, Write
 user-invocable: true
 ---
 
-# Jimeng Video Generation 3.0 Pro (即梦视频生成)
+# Jimeng Video Generation (即梦视频生成)
 
 Use the `jimeng-cli` binary to generate videos via the Volcano Engine Jimeng API.
 
@@ -22,7 +22,8 @@ The binary is located at `<plugin-dir>/bin/jimeng-cli`. If it doesn't exist, run
 <plugin-dir>/bin/jimeng-cli models
 
 # Get details for a specific model
-<plugin-dir>/bin/jimeng-cli models jimeng-video-gen-3-pro
+<plugin-dir>/bin/jimeng-cli models jimeng-action-imitation-v2
+<plugin-dir>/bin/jimeng-cli models jimeng-omnihuman
 ```
 
 The output is JSON, example:
@@ -31,35 +32,25 @@ The output is JSON, example:
   "tool": "jimeng-cli",
   "models": [
     {
-      "name": "jimeng-video-gen-3-pro",
-      "description": "Jimeng Video Generation 3.0 Pro - text-to-video and image-to-video",
-      "capabilities": ["text-to-video", "image-to-video"],
+      "name": "jimeng-action-imitation-v2",
+      "description": "Jimeng Action Imitation 2.0 - generate video by imitating actions from a template video onto a person image",
+      "capabilities": ["image+video-to-video"],
       "params": {
-        "ratio": {
-          "description": "Aspect ratio of the generated video",
-          "type": "string",
-          "options": ["16:9", "9:16", "1:1", "4:3", "3:4", "21:9"],
-          "default": "16:9"
-        },
-        "frames": {
-          "description": "Total frames: 121 for 5 seconds, 241 for 10 seconds",
-          "type": "string",
-          "options": ["121", "241"],
-          "default": "121"
-        },
-        "seed": {
-          "description": "Random seed (-1 for random)",
-          "type": "integer",
-          "default": "-1"
-        },
-        "image": {
-          "description": "First frame image URL for image-to-video mode",
-          "type": "string"
-        },
-        "image-base64": {
-          "description": "First frame image base64 for image-to-video mode",
-          "type": "string"
-        }
+        "image": { "description": "Person image URL (required)", "type": "string", "required": true },
+        "video": { "description": "Template video URL with actions to imitate (required)", "type": "string", "required": true },
+        "cut-first-second": { "description": "Whether to cut the first second of result video", "type": "boolean", "default": "true" }
+      }
+    },
+    {
+      "name": "jimeng-omnihuman",
+      "description": "Jimeng OmniHuman 1.5 - generate talking-head video from a portrait image and audio",
+      "capabilities": ["image+audio-to-video"],
+      "params": {
+        "image": { "description": "Portrait image URL (required)", "type": "string", "required": true },
+        "audio": { "description": "Audio URL, must be under 60 seconds (required)", "type": "string", "required": true },
+        "resolution": { "description": "Output video resolution", "type": "string", "options": ["720","1080"], "default": "1080" },
+        "fast-mode": { "description": "Enable fast mode (trades quality for speed)", "type": "boolean", "default": "false" },
+        "seed": { "description": "Random seed (-1 for random)", "type": "integer", "default": "-1" }
       }
     }
   ]
@@ -70,18 +61,43 @@ Use the `params` from the JSON output to construct the correct flags for `genera
 
 ## Usage
 
+### jimeng-action-imitation-v2
+
+Generate video by transferring actions from a template video onto a person image. No prompt needed.
+
 ```bash
-# Text-to-video generation
-<plugin-dir>/bin/jimeng-cli generate "<prompt>" [--ratio 16:9] [--frames 121] [--seed 42] [--output path.mp4]
+<plugin-dir>/bin/jimeng-cli generate --model jimeng-action-imitation-v2 \
+  --image <person-image-url> \
+  --video <template-video-url> \
+  [--cut-first-second true] \
+  [--output path.mp4]
 
-# Image-to-video generation (first frame mode)
-<plugin-dir>/bin/jimeng-cli generate "<prompt>" --image <image-url> [--ratio 16:9] [--frames 121] [--output path.mp4]
+# Example
+<plugin-dir>/bin/jimeng-cli generate --model jimeng-action-imitation-v2 \
+  --image https://example.com/person.jpg \
+  --video https://example.com/dance.mp4 \
+  --output dance_result.mp4
+```
 
-# Examples
-<plugin-dir>/bin/jimeng-cli generate "A cat playing piano in a jazz bar"
-<plugin-dir>/bin/jimeng-cli generate "Ocean waves at sunset" --frames 241 --ratio 16:9
-<plugin-dir>/bin/jimeng-cli generate "Dancing robot" --ratio 9:16 --output robot.mp4
-<plugin-dir>/bin/jimeng-cli generate "Expand this image" --image https://example.com/photo.jpg
+### jimeng-omnihuman
+
+Generate talking-head video from a portrait image and audio file (OmniHuman 1.5).
+
+```bash
+<plugin-dir>/bin/jimeng-cli generate "<optional-prompt>" --model jimeng-omnihuman \
+  --image <portrait-url> \
+  --audio <audio-url> \
+  [--resolution 1080] \
+  [--fast-mode] \
+  [--seed 42] \
+  [--output path.mp4]
+
+# Example
+<plugin-dir>/bin/jimeng-cli generate "Hello world" --model jimeng-omnihuman \
+  --image https://example.com/portrait.jpg \
+  --audio https://example.com/speech.wav \
+  --resolution 1080 \
+  --output talking.mp4
 ```
 
 ## Configuration
@@ -101,10 +117,10 @@ Config is stored at `~/.config/llm-api-plugin/config.json`.
 
 ## Notes
 
-- The API is **asynchronous**: a task is created first, then the CLI polls for the result every 5 seconds
+- All APIs are **asynchronous**: a task is created first, then the CLI polls for the result every 5 seconds
 - Maximum wait time is 300 seconds (5 minutes)
 - Progress status is printed to stderr during polling
 - Videos are saved as `.mp4` files to the specified output path
 - The task ID is printed to stderr for reference
-- Supports both text-to-video and image-to-video (first frame) modes
-- Default video duration is 5 seconds (121 frames), use `--frames 241` for 10 seconds
+- **jimeng-action-imitation-v2**: requires `--image` (person) and `--video` (template), no prompt needed
+- **jimeng-omnihuman**: requires `--image` (portrait) and `--audio` (under 60s), prompt is optional

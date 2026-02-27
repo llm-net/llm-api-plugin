@@ -11,7 +11,7 @@ Use the `ark-cli` binary to generate videos via the Volcano Ark API or Jimeng AP
 
 ## Binary Location
 
-The binary is located at `<plugin-dir>/bin/ark-cli`. If it doesn't exist, run `<plugin-dir>/scripts/setup.sh` first.
+The binary is located at `${CLAUDE_PLUGIN_ROOT}/bin/ark-cli`. If it doesn't exist, run `${CLAUDE_PLUGIN_ROOT}/scripts/setup.sh` first.
 
 ## Discover Available Models
 
@@ -19,11 +19,11 @@ The binary is located at `<plugin-dir>/bin/ark-cli`. If it doesn't exist, run `<
 
 ```bash
 # List all available models (JSON)
-<plugin-dir>/bin/ark-cli models
+${CLAUDE_PLUGIN_ROOT}/bin/ark-cli models
 
 # Get details for a specific model
-<plugin-dir>/bin/ark-cli models doubao-seedance-1-5-pro-251215
-<plugin-dir>/bin/ark-cli models jimeng-video-gen-3-pro
+${CLAUDE_PLUGIN_ROOT}/bin/ark-cli models doubao-seedance-1-5-pro-251215
+${CLAUDE_PLUGIN_ROOT}/bin/ark-cli models jimeng-video-gen-3-pro
 ```
 
 The output is JSON, example:
@@ -64,20 +64,20 @@ Use the `params` from the JSON output to construct the correct flags for `genera
 
 ```bash
 # Generate with Ark Seedance (default model)
-<plugin-dir>/bin/ark-cli generate "<prompt>" [--duration 5] [--resolution 720p] [--ratio 16:9] [--no-audio] [--output path.mp4]
+${CLAUDE_PLUGIN_ROOT}/bin/ark-cli generate "<prompt>" [--duration 5] [--resolution 720p] [--ratio 16:9] [--no-audio] [--output path.mp4]
 
 # Generate with Jimeng Video Gen 3.0 Pro
-<plugin-dir>/bin/ark-cli generate "<prompt>" --model jimeng-video-gen-3-pro [--ratio 16:9] [--frames 121] [--seed 42] [--output path.mp4]
+${CLAUDE_PLUGIN_ROOT}/bin/ark-cli generate "<prompt>" --model jimeng-video-gen-3-pro [--ratio 16:9] [--frames 121] [--seed 42] [--output path.mp4]
 
 # Image-to-video with Jimeng (first frame mode)
-<plugin-dir>/bin/ark-cli generate "<prompt>" --model jimeng-video-gen-3-pro --image <image-url> [--output path.mp4]
+${CLAUDE_PLUGIN_ROOT}/bin/ark-cli generate "<prompt>" --model jimeng-video-gen-3-pro --image <image-url> [--output path.mp4]
 
 # Examples
-<plugin-dir>/bin/ark-cli generate "A cat playing piano in a jazz bar"
-<plugin-dir>/bin/ark-cli generate "Ocean waves at sunset" --duration 10 --resolution 1080p
-<plugin-dir>/bin/ark-cli generate "Dancing robot" --ratio 9:16 --no-audio --output robot.mp4
-<plugin-dir>/bin/ark-cli generate "Expand this image" --model jimeng-video-gen-3-pro --image https://example.com/photo.jpg
-<plugin-dir>/bin/ark-cli generate "A dreamy forest" --model jimeng-video-gen-3-pro --frames 241
+${CLAUDE_PLUGIN_ROOT}/bin/ark-cli generate "A cat playing piano in a jazz bar"
+${CLAUDE_PLUGIN_ROOT}/bin/ark-cli generate "Ocean waves at sunset" --duration 10 --resolution 1080p
+${CLAUDE_PLUGIN_ROOT}/bin/ark-cli generate "Dancing robot" --ratio 9:16 --no-audio --output robot.mp4
+${CLAUDE_PLUGIN_ROOT}/bin/ark-cli generate "Expand this image" --model jimeng-video-gen-3-pro --image https://example.com/photo.jpg
+${CLAUDE_PLUGIN_ROOT}/bin/ark-cli generate "A dreamy forest" --model jimeng-video-gen-3-pro --frames 241
 ```
 
 ## Configuration
@@ -86,10 +86,10 @@ Ark and Jimeng use different authentication methods:
 
 ```bash
 # Set Ark API key
-<plugin-dir>/bin/ark-cli config set-key <ARK_API_KEY>
+${CLAUDE_PLUGIN_ROOT}/bin/ark-cli config set-key <ARK_API_KEY>
 
 # Set Jimeng access keys (Volcano Engine credentials)
-<plugin-dir>/bin/ark-cli config set-keys <ACCESS_KEY_ID> <SECRET_ACCESS_KEY>
+${CLAUDE_PLUGIN_ROOT}/bin/ark-cli config set-keys <ACCESS_KEY_ID> <SECRET_ACCESS_KEY>
 
 # Or via environment variables
 export ARK_API_KEY=<your-ark-api-key>
@@ -97,7 +97,7 @@ export JIMENG_ACCESS_KEY_ID=<your-access-key-id>
 export JIMENG_SECRET_ACCESS_KEY=<your-secret-access-key>
 
 # Show all configured credentials
-<plugin-dir>/bin/ark-cli config show
+${CLAUDE_PLUGIN_ROOT}/bin/ark-cli config show
 ```
 
 Config is stored at `~/.config/llm-api-plugin/config.json`.

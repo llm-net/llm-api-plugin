@@ -11,7 +11,7 @@ Use the `jimeng-cli` binary to generate videos via the Volcano Engine Jimeng API
 
 ## Binary Location
 
-The binary is located at `<plugin-dir>/bin/jimeng-cli`. If it doesn't exist, run `<plugin-dir>/scripts/setup.sh` first.
+The binary is located at `${CLAUDE_PLUGIN_ROOT}/bin/jimeng-cli`. If it doesn't exist, run `${CLAUDE_PLUGIN_ROOT}/scripts/setup.sh` first.
 
 ## Discover Available Models
 
@@ -19,11 +19,11 @@ The binary is located at `<plugin-dir>/bin/jimeng-cli`. If it doesn't exist, run
 
 ```bash
 # List all available models (JSON)
-<plugin-dir>/bin/jimeng-cli models
+${CLAUDE_PLUGIN_ROOT}/bin/jimeng-cli models
 
 # Get details for a specific model
-<plugin-dir>/bin/jimeng-cli models jimeng-action-imitation-v2
-<plugin-dir>/bin/jimeng-cli models jimeng-omnihuman
+${CLAUDE_PLUGIN_ROOT}/bin/jimeng-cli models jimeng-action-imitation-v2
+${CLAUDE_PLUGIN_ROOT}/bin/jimeng-cli models jimeng-omnihuman
 ```
 
 The output is JSON, example:
@@ -66,14 +66,14 @@ Use the `params` from the JSON output to construct the correct flags for `genera
 Generate video by transferring actions from a template video onto a person image. No prompt needed.
 
 ```bash
-<plugin-dir>/bin/jimeng-cli generate --model jimeng-action-imitation-v2 \
+${CLAUDE_PLUGIN_ROOT}/bin/jimeng-cli generate --model jimeng-action-imitation-v2 \
   --image <person-image-url> \
   --video <template-video-url> \
   [--cut-first-second true] \
   [--output path.mp4]
 
 # Example
-<plugin-dir>/bin/jimeng-cli generate --model jimeng-action-imitation-v2 \
+${CLAUDE_PLUGIN_ROOT}/bin/jimeng-cli generate --model jimeng-action-imitation-v2 \
   --image https://example.com/person.jpg \
   --video https://example.com/dance.mp4 \
   --output dance_result.mp4
@@ -84,7 +84,7 @@ Generate video by transferring actions from a template video onto a person image
 Generate talking-head video from a portrait image and audio file (OmniHuman 1.5).
 
 ```bash
-<plugin-dir>/bin/jimeng-cli generate "<optional-prompt>" --model jimeng-omnihuman \
+${CLAUDE_PLUGIN_ROOT}/bin/jimeng-cli generate "<optional-prompt>" --model jimeng-omnihuman \
   --image <portrait-url> \
   --audio <audio-url> \
   [--resolution 1080] \
@@ -93,7 +93,7 @@ Generate talking-head video from a portrait image and audio file (OmniHuman 1.5)
   [--output path.mp4]
 
 # Example
-<plugin-dir>/bin/jimeng-cli generate "Hello world" --model jimeng-omnihuman \
+${CLAUDE_PLUGIN_ROOT}/bin/jimeng-cli generate "Hello world" --model jimeng-omnihuman \
   --image https://example.com/portrait.jpg \
   --audio https://example.com/speech.wav \
   --resolution 1080 \
@@ -106,7 +106,7 @@ Jimeng uses AccessKeyID + SecretAccessKey authentication (Volcano Engine credent
 
 ```bash
 # Set credentials via CLI
-<plugin-dir>/bin/jimeng-cli config set-keys <ACCESS_KEY_ID> <SECRET_ACCESS_KEY>
+${CLAUDE_PLUGIN_ROOT}/bin/jimeng-cli config set-keys <ACCESS_KEY_ID> <SECRET_ACCESS_KEY>
 
 # Or via environment variables
 export JIMENG_ACCESS_KEY_ID=<your-access-key-id>

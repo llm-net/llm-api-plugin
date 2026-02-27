@@ -11,7 +11,7 @@ Use the `topview-cli` binary to generate talking avatar videos via the TopView A
 
 ## Binary Location
 
-The binary is located at `<plugin-dir>/bin/topview-cli`. If it doesn't exist, run `<plugin-dir>/scripts/setup.sh` first.
+The binary is located at `${CLAUDE_PLUGIN_ROOT}/bin/topview-cli`. If it doesn't exist, run `${CLAUDE_PLUGIN_ROOT}/scripts/setup.sh` first.
 
 ## Discover Available Models
 
@@ -19,10 +19,10 @@ The binary is located at `<plugin-dir>/bin/topview-cli`. If it doesn't exist, ru
 
 ```bash
 # List all available models (JSON)
-<plugin-dir>/bin/topview-cli models
+${CLAUDE_PLUGIN_ROOT}/bin/topview-cli models
 
 # Get details for a specific model
-<plugin-dir>/bin/topview-cli models topview-video-avatar
+${CLAUDE_PLUGIN_ROOT}/bin/topview-cli models topview-video-avatar
 ```
 
 The output is JSON, example:
@@ -57,23 +57,23 @@ Use the `params` from the JSON output to construct the correct flags for `genera
 
 ```bash
 # Generate a video avatar
-<plugin-dir>/bin/topview-cli generate --image <portrait.jpg> --audio <speech.mp3> [--output path.mp4]
+${CLAUDE_PLUGIN_ROOT}/bin/topview-cli generate --image <portrait.jpg> --audio <speech.mp3> [--output path.mp4]
 
 # Examples
-<plugin-dir>/bin/topview-cli generate --image portrait.jpg --audio speech.mp3
-<plugin-dir>/bin/topview-cli generate --image photo.png --audio audio.wav --output avatar.mp4
+${CLAUDE_PLUGIN_ROOT}/bin/topview-cli generate --image portrait.jpg --audio speech.mp3
+${CLAUDE_PLUGIN_ROOT}/bin/topview-cli generate --image photo.png --audio audio.wav --output avatar.mp4
 ```
 
 ## Configuration
 
 If the API key is not configured, run:
 ```bash
-<plugin-dir>/bin/topview-cli config set-key <TOPVIEW_API_KEY>
+${CLAUDE_PLUGIN_ROOT}/bin/topview-cli config set-key <TOPVIEW_API_KEY>
 ```
 
 Optionally set the TopView UID:
 ```bash
-<plugin-dir>/bin/topview-cli config set-uid <TOPVIEW_UID>
+${CLAUDE_PLUGIN_ROOT}/bin/topview-cli config set-uid <TOPVIEW_UID>
 ```
 
 Config is stored at `~/.config/llm-api-plugin/config.json`.

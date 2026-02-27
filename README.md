@@ -7,10 +7,11 @@
 在 Claude Code 中执行：
 
 ```
-/install-plugin https://github.com/llm-net/llm-api-plugin
+/plugin marketplace add llm-net/llm-api-plugin
+/plugin install llm-api-plugin@llm-net-llm-api-plugin
 ```
 
-安装过程会自动运行 `scripts/setup.sh`，检测你的操作系统和 CPU 架构，从 GitHub Release 下载对应的预编译二进制到插件的 `bin/` 目录。**不需要 Go 环境。**
+首次启动会话时，`SessionStart` hook 会自动运行 `scripts/setup.sh`，检测你的操作系统和 CPU 架构，从 GitHub Release 下载对应的预编译二进制到插件的 `bin/` 目录。**不需要 Go 环境。**
 
 ## 配置 API Key
 

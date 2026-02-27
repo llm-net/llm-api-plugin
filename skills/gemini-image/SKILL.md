@@ -11,7 +11,7 @@ Use the `gemini-cli` binary to generate images via the Gemini API.
 
 ## Binary Location
 
-The binary is located at `<plugin-dir>/bin/gemini-cli`. If it doesn't exist, run `<plugin-dir>/scripts/setup.sh` first.
+The binary is located at `${CLAUDE_PLUGIN_ROOT}/bin/gemini-cli`. If it doesn't exist, run `${CLAUDE_PLUGIN_ROOT}/scripts/setup.sh` first.
 
 ## Discover Available Models
 
@@ -19,10 +19,10 @@ The binary is located at `<plugin-dir>/bin/gemini-cli`. If it doesn't exist, run
 
 ```bash
 # List all available models (JSON)
-<plugin-dir>/bin/gemini-cli models
+${CLAUDE_PLUGIN_ROOT}/bin/gemini-cli models
 
 # Get details for a specific model
-<plugin-dir>/bin/gemini-cli models gemini-3.1-flash-image-preview
+${CLAUDE_PLUGIN_ROOT}/bin/gemini-cli models gemini-3.1-flash-image-preview
 ```
 
 The output is JSON, example:
@@ -59,17 +59,17 @@ Use the `params` from the JSON output to construct the correct flags for `genera
 
 ```bash
 # Generate an image (use flags from models output)
-<plugin-dir>/bin/gemini-cli generate "<prompt>" --model <model-name> [--ratio 16:9] [--size 2K] [--output path.png]
+${CLAUDE_PLUGIN_ROOT}/bin/gemini-cli generate "<prompt>" --model <model-name> [--ratio 16:9] [--size 2K] [--output path.png]
 
 # Text-only response (no image)
-<plugin-dir>/bin/gemini-cli generate "<prompt>" --text-only
+${CLAUDE_PLUGIN_ROOT}/bin/gemini-cli generate "<prompt>" --text-only
 ```
 
 ## Configuration
 
 If the API key is not configured, run:
 ```bash
-<plugin-dir>/bin/gemini-cli config set-key <GEMINI_API_KEY>
+${CLAUDE_PLUGIN_ROOT}/bin/gemini-cli config set-key <GEMINI_API_KEY>
 ```
 
 Config is stored at `~/.config/llm-api-plugin/config.json`.

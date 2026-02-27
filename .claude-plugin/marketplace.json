@@ -13,7 +13,7 @@
       "author": {
         "name": "llm-net"
       },
-      "source": ".",
+      "source": "./",
       "category": "development",
       "homepage": "https://github.com/llm-net/llm-api-plugin"
     }

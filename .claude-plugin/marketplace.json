@@ -1,0 +1,21 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "llm-net-llm-api-plugin",
+  "description": "CLI tools for multiple LLM APIs (Gemini, Ark/Seedance, Jimeng, TopView) as Claude Code skills",
+  "owner": {
+    "name": "llm-net"
+  },
+  "plugins": [
+    {
+      "name": "llm-api-plugin",
+      "description": "CLI tools for multiple LLM APIs (Gemini, Ark/Seedance, Jimeng, TopView) as Claude Code skills",
+      "version": "0.1.1",
+      "author": {
+        "name": "llm-net"
+      },
+      "source": ".",
+      "category": "development",
+      "homepage": "https://github.com/llm-net/llm-api-plugin"
+    }
+  ]
+}

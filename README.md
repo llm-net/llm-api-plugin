@@ -6,8 +6,11 @@
 
 在 Claude Code 中执行：
 
-```
+```bash
+# 1. 添加插件市场
 /plugin marketplace add llm-net/llm-api-plugin
+
+# 2. 安装插件（在 /plugin 界面的 Discover 标签中选择，或直接执行）
 /plugin install llm-api-plugin@llm-net-llm-api-plugin
 ```
 

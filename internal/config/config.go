@@ -8,15 +8,18 @@ import (
 )
 
 type ServiceConfig struct {
-	APIKey string `json:"api_key"`
-	UID    string `json:"uid,omitempty"`
+	APIKey         string `json:"api_key,omitempty"`
+	UID            string `json:"uid,omitempty"`
+	AccessKeyID    string `json:"access_key_id,omitempty"`
+	SecretAccessKey string `json:"secret_access_key,omitempty"`
 }
 
 type Config struct {
-	Gemini *ServiceConfig `json:"gemini,omitempty"`
-	Veo3   *ServiceConfig `json:"veo3,omitempty"`
+	Gemini  *ServiceConfig `json:"gemini,omitempty"`
+	Veo3    *ServiceConfig `json:"veo3,omitempty"`
 	Ark     *ServiceConfig `json:"ark,omitempty"`
 	TopView *ServiceConfig `json:"topview,omitempty"`
+	Jimeng  *ServiceConfig `json:"jimeng,omitempty"`
 }
 
 func Path() string {
@@ -70,4 +73,18 @@ func ResolveAPIKey(envVar string, fromConfig *ServiceConfig) string {
 		return fromConfig.APIKey
 	}
 	return ""
+}
+
+// ResolveAccessKeys returns the AccessKeyID and SecretAccessKey for a service.
+// Priority: environment variables > config file.
+func ResolveAccessKeys(akEnvVar, skEnvVar string, fromConfig *ServiceConfig) (accessKeyID, secretAccessKey string) {
+	accessKeyID = os.Getenv(akEnvVar)
+	if accessKeyID == "" && fromConfig != nil {
+		accessKeyID = fromConfig.AccessKeyID
+	}
+	secretAccessKey = os.Getenv(skEnvVar)
+	if secretAccessKey == "" && fromConfig != nil {
+		secretAccessKey = fromConfig.SecretAccessKey
+	}
+	return
 }

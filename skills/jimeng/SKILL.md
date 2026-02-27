@@ -1,17 +1,17 @@
 ---
 name: jimeng
-description: Generate videos using Volcano Ark Seedance API (火山方舟). Use when the user wants to generate or create videos with Jimeng/Seedance.
+description: Generate videos using Jimeng Video Generation 3.0 Pro API (即梦视频生成). Use when the user wants to generate or create videos with Jimeng.
 allowed-tools: Bash, Read, Write
 user-invocable: true
 ---
 
-# Jimeng Video Generation (via Volcano Ark Seedance API)
+# Jimeng Video Generation 3.0 Pro (即梦视频生成)
 
-Use the `ark-cli` binary to generate videos via the Volcano Ark API.
+Use the `jimeng-cli` binary to generate videos via the Volcano Engine Jimeng API.
 
 ## Binary Location
 
-The binary is located at `<plugin-dir>/bin/ark-cli`. If it doesn't exist, run `<plugin-dir>/scripts/setup.sh` first.
+The binary is located at `<plugin-dir>/bin/jimeng-cli`. If it doesn't exist, run `<plugin-dir>/scripts/setup.sh` first.
 
 ## Discover Available Models
 
@@ -19,45 +19,46 @@ The binary is located at `<plugin-dir>/bin/ark-cli`. If it doesn't exist, run `<
 
 ```bash
 # List all available models (JSON)
-<plugin-dir>/bin/ark-cli models
+<plugin-dir>/bin/jimeng-cli models
 
 # Get details for a specific model
-<plugin-dir>/bin/ark-cli models doubao-seedance-1-5-pro-251215
+<plugin-dir>/bin/jimeng-cli models jimeng-video-gen-3-pro
 ```
 
 The output is JSON, example:
 ```json
 {
-  "tool": "ark-cli",
+  "tool": "jimeng-cli",
   "models": [
     {
-      "name": "doubao-seedance-1-5-pro-251215",
-      "description": "Video generation from text or image prompts using Seedance 1.5 Pro",
+      "name": "jimeng-video-gen-3-pro",
+      "description": "Jimeng Video Generation 3.0 Pro - text-to-video and image-to-video",
       "capabilities": ["text-to-video", "image-to-video"],
       "params": {
-        "duration": {
-          "description": "Video duration in seconds",
-          "type": "string",
-          "options": ["5", "10"],
-          "default": "5"
-        },
-        "resolution": {
-          "description": "Video resolution",
-          "type": "string",
-          "options": ["720p", "1080p"],
-          "default": "720p"
-        },
         "ratio": {
           "description": "Aspect ratio of the generated video",
           "type": "string",
           "options": ["16:9", "9:16", "1:1", "4:3", "3:4", "21:9"],
           "default": "16:9"
         },
-        "audio": {
-          "description": "Whether to generate audio",
+        "frames": {
+          "description": "Total frames: 121 for 5 seconds, 241 for 10 seconds",
           "type": "string",
-          "options": ["true", "false"],
-          "default": "true"
+          "options": ["121", "241"],
+          "default": "121"
+        },
+        "seed": {
+          "description": "Random seed (-1 for random)",
+          "type": "integer",
+          "default": "-1"
+        },
+        "image": {
+          "description": "First frame image URL for image-to-video mode",
+          "type": "string"
+        },
+        "image-base64": {
+          "description": "First frame image base64 for image-to-video mode",
+          "type": "string"
         }
       }
     }
@@ -70,20 +71,30 @@ Use the `params` from the JSON output to construct the correct flags for `genera
 ## Usage
 
 ```bash
-# Generate a video (use flags from models output)
-<plugin-dir>/bin/ark-cli generate "<prompt>" --model <model-name> [--duration 5] [--resolution 720p] [--ratio 16:9] [--no-audio] [--output path.mp4]
+# Text-to-video generation
+<plugin-dir>/bin/jimeng-cli generate "<prompt>" [--ratio 16:9] [--frames 121] [--seed 42] [--output path.mp4]
+
+# Image-to-video generation (first frame mode)
+<plugin-dir>/bin/jimeng-cli generate "<prompt>" --image <image-url> [--ratio 16:9] [--frames 121] [--output path.mp4]
 
 # Examples
-<plugin-dir>/bin/ark-cli generate "A cat playing piano in a jazz bar"
-<plugin-dir>/bin/ark-cli generate "Ocean waves at sunset" --duration 10 --resolution 1080p
-<plugin-dir>/bin/ark-cli generate "Dancing robot" --ratio 9:16 --no-audio --output robot.mp4
+<plugin-dir>/bin/jimeng-cli generate "A cat playing piano in a jazz bar"
+<plugin-dir>/bin/jimeng-cli generate "Ocean waves at sunset" --frames 241 --ratio 16:9
+<plugin-dir>/bin/jimeng-cli generate "Dancing robot" --ratio 9:16 --output robot.mp4
+<plugin-dir>/bin/jimeng-cli generate "Expand this image" --image https://example.com/photo.jpg
 ```
 
 ## Configuration
 
-If the API key is not configured, run:
+Jimeng uses AccessKeyID + SecretAccessKey authentication (Volcano Engine credentials).
+
 ```bash
-<plugin-dir>/bin/ark-cli config set-key <ARK_API_KEY>
+# Set credentials via CLI
+<plugin-dir>/bin/jimeng-cli config set-keys <ACCESS_KEY_ID> <SECRET_ACCESS_KEY>
+
+# Or via environment variables
+export JIMENG_ACCESS_KEY_ID=<your-access-key-id>
+export JIMENG_SECRET_ACCESS_KEY=<your-secret-access-key>
 ```
 
 Config is stored at `~/.config/llm-api-plugin/config.json`.
@@ -95,3 +106,5 @@ Config is stored at `~/.config/llm-api-plugin/config.json`.
 - Progress status is printed to stderr during polling
 - Videos are saved as `.mp4` files to the specified output path
 - The task ID is printed to stderr for reference
+- Supports both text-to-video and image-to-video (first frame) modes
+- Default video duration is 5 seconds (121 frames), use `--frames 241` for 10 seconds

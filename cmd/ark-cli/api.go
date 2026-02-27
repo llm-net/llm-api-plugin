@@ -47,13 +47,13 @@ type CreateTaskResponse struct {
 }
 
 type TaskResult struct {
-	ID     string         `json:"id"`
-	Status string         `json:"status"`
-	Output *TaskOutput    `json:"output,omitempty"`
-	Error  *APIError      `json:"error,omitempty"`
+	ID      string              `json:"id"`
+	Status  string              `json:"status"`
+	Content *TaskResultContent  `json:"content,omitempty"`
+	Error   *APIError           `json:"error,omitempty"`
 }
 
-type TaskOutput struct {
+type TaskResultContent struct {
 	VideoURL string `json:"video_url,omitempty"`
 }
 

@@ -19,9 +19,12 @@ var registry = &models.Registry{
 			Capabilities: []string{"image+video-to-video"},
 			Params: map[string]models.Param{
 				"image": {
-					Description: "Person image URL (required)",
+					Description: "Person image URL",
 					Type:        "string",
-					Required:    true,
+				},
+				"image-file": {
+					Description: "Person image from local file (auto base64-encoded)",
+					Type:        "string",
 				},
 				"video": {
 					Description: "Template video URL with actions to imitate (required)",
@@ -41,9 +44,12 @@ var registry = &models.Registry{
 			Capabilities: []string{"image+audio-to-video"},
 			Params: map[string]models.Param{
 				"image": {
-					Description: "Portrait image URL (required)",
+					Description: "Portrait image URL",
 					Type:        "string",
-					Required:    true,
+				},
+				"image-file": {
+					Description: "Portrait image from local file (auto base64-encoded)",
+					Type:        "string",
 				},
 				"audio": {
 					Description: "Audio URL, must be under 60 seconds (required)",

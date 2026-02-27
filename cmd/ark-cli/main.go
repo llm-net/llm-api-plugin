@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -30,9 +31,9 @@ Flags for generate:
   --frames <num>               Total frames: 121 (5s) or 241 (10s)         [default: 121]    (Jimeng models)
   --seed <num>                 Random seed (-1 for random)                                   (Jimeng models)
   --image <url>                First frame image URL                                         (Jimeng i2v models)
-  --image-base64 <data>        First frame image base64                                      (Jimeng i2v models)
+  --image-file <path>          First frame image from local file (auto base64-encoded)        (Jimeng i2v models)
   --end-image <url>            Last frame image URL                                          (Jimeng i2v-startend)
-  --end-image-base64 <data>    Last frame image base64                                       (Jimeng i2v-startend)
+  --end-image-file <path>      Last frame image from local file (auto base64-encoded)         (Jimeng i2v-startend)
   --output <path>              Output file path                            [default: output_<timestamp>.mp4]
 
 Examples:
@@ -182,9 +183,9 @@ func handleGenerate() {
 	frames := 0
 	seed := 0
 	image := ""
-	imageBase64 := ""
+	imageFile := ""
 	endImage := ""
-	endImageBase64 := ""
+	endImageFile := ""
 	// Common
 	output := ""
 
@@ -232,20 +233,20 @@ func handleGenerate() {
 			if i < len(args) {
 				image = args[i]
 			}
-		case "--image-base64":
+		case "--image-file":
 			i++
 			if i < len(args) {
-				imageBase64 = args[i]
+				imageFile = args[i]
 			}
 		case "--end-image":
 			i++
 			if i < len(args) {
 				endImage = args[i]
 			}
-		case "--end-image-base64":
+		case "--end-image-file":
 			i++
 			if i < len(args) {
-				endImageBase64 = args[i]
+				endImageFile = args[i]
 			}
 		case "--output":
 			i++
@@ -268,6 +269,25 @@ func handleGenerate() {
 
 	if output == "" {
 		output = fmt.Sprintf("output_%s.mp4", time.Now().Format("20060102_150405"))
+	}
+
+	// Read image files and base64-encode them
+	var imageBase64, endImageBase64 string
+	if imageFile != "" {
+		data, err := os.ReadFile(imageFile)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error reading image file %s: %v\n", imageFile, err)
+			os.Exit(1)
+		}
+		imageBase64 = base64.StdEncoding.EncodeToString(data)
+	}
+	if endImageFile != "" {
+		data, err := os.ReadFile(endImageFile)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error reading end image file %s: %v\n", endImageFile, err)
+			os.Exit(1)
+		}
+		endImageBase64 = base64.StdEncoding.EncodeToString(data)
 	}
 
 	// Determine model and provider

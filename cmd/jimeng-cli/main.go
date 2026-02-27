@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -28,11 +29,13 @@ Flags for generate:
 
 Flags for jimeng-action-imitation-v2:
   --image <url>            Person image URL (required)
+  --image-file <path>      Person image from local file (auto base64-encoded)
   --video <url>            Template video URL (required)
   --cut-first-second       Whether to cut the first second of result     [default: true]
 
 Flags for jimeng-omnihuman:
   --image <url>            Portrait image URL (required)
+  --image-file <path>      Portrait image from local file (auto base64-encoded)
   --audio <url>            Audio URL, under 60s (required)
   --resolution <num>       Output resolution: 720 or 1080               [default: 1080]
   --fast-mode              Enable fast mode (trades quality for speed)
@@ -138,6 +141,7 @@ func handleGenerate() {
 	modelName := defaultModel
 	seed := 0
 	image := ""
+	imageFile := ""
 	video := ""
 	audio := ""
 	resolution := 0
@@ -165,6 +169,11 @@ func handleGenerate() {
 			i++
 			if i < len(args) {
 				image = args[i]
+			}
+		case "--image-file":
+			i++
+			if i < len(args) {
+				imageFile = args[i]
 			}
 		case "--video":
 			i++
@@ -207,6 +216,17 @@ func handleGenerate() {
 		}
 	}
 
+	// Read image file and base64-encode it
+	var imageBase64 string
+	if imageFile != "" {
+		data, err := os.ReadFile(imageFile)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error reading image file %s: %v\n", imageFile, err)
+			os.Exit(1)
+		}
+		imageBase64 = base64.StdEncoding.EncodeToString(data)
+	}
+
 	// Validate model name
 	providerKey, ok := modelProvider[modelName]
 	if !ok {
@@ -232,16 +252,16 @@ func handleGenerate() {
 	// Dispatch to model-specific function
 	switch providerKey {
 	case "action-imitation-v2":
-		generateWithActionImitationV2(ak, sk, image, video, cutFirstSecond, cutFirstSecondSet, output)
+		generateWithActionImitationV2(ak, sk, image, imageBase64, video, cutFirstSecond, cutFirstSecondSet, output)
 	case "omnihuman":
-		generateWithOmniHuman(ak, sk, prompt, image, audio, resolution, fastMode, seed, output)
+		generateWithOmniHuman(ak, sk, prompt, image, imageBase64, audio, resolution, fastMode, seed, output)
 	}
 }
 
 // generateWithActionImitationV2 handles jimeng-action-imitation-v2 model.
-func generateWithActionImitationV2(ak, sk, image, video string, cutFirstSecond, cutFirstSecondSet bool, output string) {
-	if image == "" {
-		fmt.Fprintln(os.Stderr, "Error: --image is required for jimeng-action-imitation-v2")
+func generateWithActionImitationV2(ak, sk, image, imageBase64, video string, cutFirstSecond, cutFirstSecondSet bool, output string) {
+	if image == "" && imageBase64 == "" {
+		fmt.Fprintln(os.Stderr, "Error: --image or --image-file is required for jimeng-action-imitation-v2")
 		os.Exit(1)
 	}
 	if video == "" {
@@ -253,8 +273,9 @@ func generateWithActionImitationV2(ak, sk, image, video string, cutFirstSecond, 
 	ctx := context.Background()
 
 	req := &provider.ActionImitationV2Request{
-		ImageURL: image,
-		VideoURL: video,
+		ImageURL:    image,
+		ImageBase64: imageBase64,
+		VideoURL:    video,
 	}
 	if cutFirstSecondSet {
 		req.CutFirstSecond = &cutFirstSecond
@@ -308,9 +329,9 @@ func generateWithActionImitationV2(ak, sk, image, video string, cutFirstSecond, 
 }
 
 // generateWithOmniHuman handles jimeng-omnihuman model.
-func generateWithOmniHuman(ak, sk, prompt, image, audio string, resolution int, fastMode bool, seed int, output string) {
-	if image == "" {
-		fmt.Fprintln(os.Stderr, "Error: --image is required for jimeng-omnihuman")
+func generateWithOmniHuman(ak, sk, prompt, image, imageBase64, audio string, resolution int, fastMode bool, seed int, output string) {
+	if image == "" && imageBase64 == "" {
+		fmt.Fprintln(os.Stderr, "Error: --image or --image-file is required for jimeng-omnihuman")
 		os.Exit(1)
 	}
 	if audio == "" {
@@ -323,6 +344,7 @@ func generateWithOmniHuman(ak, sk, prompt, image, audio string, resolution int, 
 
 	req := &provider.OmniHumanRequest{
 		ImageURL:         image,
+		ImageBase64:      imageBase64,
 		AudioURL:         audio,
 		Prompt:           prompt,
 		Seed:             seed,

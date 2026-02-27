@@ -87,8 +87,8 @@ var registry = &models.Registry{
 					Description: "First frame image URL",
 					Type:        "string",
 				},
-				"image-base64": {
-					Description: "First frame image base64",
+				"image-file": {
+					Description: "First frame image from local file (auto base64-encoded)",
 					Type:        "string",
 				},
 			}),
@@ -102,16 +102,16 @@ var registry = &models.Registry{
 					Description: "First frame image URL",
 					Type:        "string",
 				},
-				"image-base64": {
-					Description: "First frame image base64",
+				"image-file": {
+					Description: "First frame image from local file (auto base64-encoded)",
 					Type:        "string",
 				},
 				"end-image": {
 					Description: "Last frame image URL",
 					Type:        "string",
 				},
-				"end-image-base64": {
-					Description: "Last frame image base64",
+				"end-image-file": {
+					Description: "Last frame image from local file (auto base64-encoded)",
 					Type:        "string",
 				},
 			}),

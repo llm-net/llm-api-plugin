@@ -31,6 +31,7 @@ func NewJimengActionImitationV2Provider(accessKeyID, secretAccessKey string) *Ji
 // ActionImitationV2Request 动作模仿2.0请求参数
 type ActionImitationV2Request struct {
 	ImageURL       string // 输入图片URL
+	ImageBase64    string // 输入图片base64（从本地文件读取）
 	VideoURL       string // 模板视频URL
 	CutFirstSecond *bool  // 是否裁剪结果视频的第1秒，默认true
 }
@@ -52,9 +53,15 @@ type ActionImitationV2QueryResult struct {
 // SubmitTask 提交动作模仿2.0任务
 func (p *JimengActionImitationV2Provider) SubmitTask(ctx context.Context, req *ActionImitationV2Request) (*ActionImitationV2SubmitResult, error) {
 	reqBody := map[string]interface{}{
-		"req_key":    jimengActionImitationV2ReqKey,
-		"image_urls": []string{req.ImageURL},
-		"video_url":  req.VideoURL,
+		"req_key":   jimengActionImitationV2ReqKey,
+		"video_url": req.VideoURL,
+	}
+
+	// base64 优先于 URL
+	if req.ImageBase64 != "" {
+		reqBody["binary_data_base64"] = []string{req.ImageBase64}
+	} else if req.ImageURL != "" {
+		reqBody["image_urls"] = []string{req.ImageURL}
 	}
 
 	// cut_result_first_second_switch 默认为 true，仅在显式设置时传递

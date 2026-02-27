@@ -32,6 +32,7 @@ func NewJimengOmniHumanProvider(accessKeyID, secretAccessKey string) *JimengOmni
 // OmniHumanRequest OmniHuman请求参数
 type OmniHumanRequest struct {
 	ImageURL         string // 人像图片URL（必填）
+	ImageBase64      string // 人像图片base64（从本地文件读取）
 	AudioURL         string // 音频URL（必填，时长必须小于60秒）
 	Prompt           string // 提示词（可选，仅限中文、英语、日语、韩语、墨西哥语、印尼语，建议≤300字符）
 	Seed             int    // 随机种子（可选，默认-1随机）
@@ -57,8 +58,14 @@ type OmniHumanQueryResult struct {
 func (p *JimengOmniHumanProvider) SubmitTask(ctx context.Context, req *OmniHumanRequest) (*OmniHumanSubmitResult, error) {
 	reqBody := map[string]interface{}{
 		"req_key":   omniHumanVideoGenerationReqKey,
-		"image_url": req.ImageURL,
 		"audio_url": req.AudioURL,
+	}
+
+	// base64 优先于 URL
+	if req.ImageBase64 != "" {
+		reqBody["binary_data_base64"] = []string{req.ImageBase64}
+	} else if req.ImageURL != "" {
+		reqBody["image_url"] = req.ImageURL
 	}
 
 	// 添加可选的提示词

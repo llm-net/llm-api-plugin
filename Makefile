@@ -28,8 +28,10 @@ release:
 	@for tool in $(TOOLS); do \
 		for os in linux darwin windows; do \
 			for arch in amd64 arm64; do \
-				echo "Building $$tool-$$os-$$arch..."; \
-				GOOS=$$os GOARCH=$$arch $(GO) build $(GOFLAGS) -o dist/$$tool-$$os-$$arch ./cmd/$$tool/; \
+				ext=""; \
+				if [ "$$os" = "windows" ]; then ext=".exe"; fi; \
+				echo "Building $$tool-$$os-$$arch$$ext..."; \
+				GOOS=$$os GOARCH=$$arch $(GO) build $(GOFLAGS) -o dist/$$tool-$$os-$$arch$$ext ./cmd/$$tool/; \
 			done; \
 		done; \
 	done

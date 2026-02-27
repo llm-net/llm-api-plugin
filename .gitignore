@@ -33,8 +33,9 @@ bin/
 
 # CLI binaries built to project root (go build without -o)
 /gemini-cli
-/veo3-cli
+/ark-cli
 /jimeng-cli
+/topview-cli
 
 # Release build output
 dist/
